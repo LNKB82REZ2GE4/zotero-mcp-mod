@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Literal, Optional, Union
 import os
 import uuid
 import tempfile
+import re
 
 from fastmcp import Context, FastMCP
 
@@ -20,11 +21,12 @@ from zotero_mcp.utils import format_creators
 
 
 def ensure_list(value: Union[str, List[str], None]) -> List[str]:
-    """Convert a string or list value to a list."""
+    """Convert a comma-separated string or list into a list of strings."""
     if value is None:
         return []
     if isinstance(value, str):
-        return [value]
+        parts = re.split(r"[;,]", value)
+        return [p.strip() for p in parts if p.strip()]
     if isinstance(value, list):
         return value
     return []
