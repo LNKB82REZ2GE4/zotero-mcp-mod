@@ -27,7 +27,7 @@ class AttachmentDetails:
     content_type: str
 
 
-def get_zotero_client() -> zotero.Zotero:
+def get_zotero_client(local: Optional[bool] = None) -> zotero.Zotero:
     """
     Get authenticated Zotero client using environment variables.
     
@@ -40,7 +40,10 @@ def get_zotero_client() -> zotero.Zotero:
     library_id = os.getenv("ZOTERO_LIBRARY_ID")
     library_type = os.getenv("ZOTERO_LIBRARY_TYPE", "user")
     api_key = os.getenv("ZOTERO_API_KEY")
-    local = os.getenv("ZOTERO_LOCAL", "").lower() in ["true", "yes", "1"]
+
+    env_local = os.getenv("ZOTERO_LOCAL", "").lower() in ["true", "yes", "1"]
+    if local is None:
+        local = env_local
 
     # For local API, default to user ID 0 if not specified
     if local and not library_id:
