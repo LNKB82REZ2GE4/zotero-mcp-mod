@@ -145,6 +145,9 @@ For accessing your Zotero library via the web API (useful for remote setups):
 zotero-mcp setup --no-local --api-key YOUR_API_KEY --library-id YOUR_LIBRARY_ID
 ```
 
+**Note:** The local Zotero API is read-only for modifying items. Features such as
+batch tag updates or creating notes require the web API.
+
 ### Environment Variables
 
 - `ZOTERO_LOCAL=true`: Use the local Zotero API (default: false)

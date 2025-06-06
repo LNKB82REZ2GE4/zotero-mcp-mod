@@ -643,6 +643,11 @@ def batch_update_tags(
         Summary of the batch update
     """
     try:
+        if os.environ.get("ZOTERO_LOCAL", "").lower() in ["true", "yes", "1"]:
+            return (
+                "Error: Batch tag updates require the Zotero Web API. "
+                "The local Zotero API is read-only for item modifications."
+            )
         if not query:
             return "Error: Search query cannot be empty"
 
