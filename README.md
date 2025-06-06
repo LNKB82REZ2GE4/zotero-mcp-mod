@@ -147,7 +147,9 @@ zotero-mcp setup --no-local --api-key YOUR_API_KEY --library-id YOUR_LIBRARY_ID
 
 **Note:** The local Zotero API is read-only for modifying items. Features such as
 batch tag updates or creating notes will automatically fall back to the web API
-when API credentials are available.
+when API credentials are available. All read-only tools (searching, fetching
+metadata, or retrieving full text) always use the local API so attachments and
+PDFs are accessible.
 
 ### Environment Variables
 
