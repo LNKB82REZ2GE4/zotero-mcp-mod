@@ -18,6 +18,17 @@ from zotero_mcp.client import (
 )
 from zotero_mcp.utils import format_creators
 
+
+def ensure_list(value: Union[str, List[str], None]) -> List[str]:
+    """Convert a string or list value to a list."""
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        return value
+    return []
+
 # Create an MCP server with appropriate dependencies
 mcp = FastMCP(
     "Zotero",
@@ -610,8 +621,8 @@ def get_recent(
 )
 def batch_update_tags(
     query: str,
-    add_tags: Optional[List[str]] = None,
-    remove_tags: Optional[List[str]] = None,
+    add_tags: Optional[Union[str, List[str]]] = None,
+    remove_tags: Optional[Union[str, List[str]]] = None,
     limit: int = 50,
     *,
     ctx: Context
@@ -621,8 +632,8 @@ def batch_update_tags(
     
     Args:
         query: Search query to find items to update
-        add_tags: List of tags to add to matched items
-        remove_tags: List of tags to remove from matched items
+        add_tags: Tag(s) to add to matched items (string or list)
+        remove_tags: Tag(s) to remove from matched items (string or list)
         limit: Maximum number of items to process
         ctx: MCP context
     
@@ -632,7 +643,10 @@ def batch_update_tags(
     try:
         if not query:
             return "Error: Search query cannot be empty"
-        
+
+        add_tags = ensure_list(add_tags)
+        remove_tags = ensure_list(remove_tags)
+
         if not add_tags and not remove_tags:
             return "Error: You must specify either tags to add or tags to remove"
         
@@ -1426,7 +1440,7 @@ def create_note(
     item_key: str,
     note_title: str,
     note_text: str,
-    tags: Optional[List[str]] = None,
+    tags: Optional[Union[str, List[str]]] = None,
     *,
     ctx: Context
 ) -> str:
@@ -1437,7 +1451,7 @@ def create_note(
         item_key: Zotero item key/ID to attach the note to
         note_title: Title for the note
         note_text: Content of the note (can include simple HTML formatting)
-        tags: List of tags to apply to the note
+        tags: Tag(s) to apply to the note (string or list)
         ctx: MCP context
     
     Returns:
@@ -1446,6 +1460,8 @@ def create_note(
     try:
         ctx.info(f"Creating note for item {item_key}")
         zot = get_zotero_client()
+
+        tags = ensure_list(tags)
         
         # First verify the parent item exists
         try:
