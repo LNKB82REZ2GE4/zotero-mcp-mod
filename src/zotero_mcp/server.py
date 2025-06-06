@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Literal, Optional, Union
 import os
 import uuid
 import tempfile
+import re
 
 from fastmcp import Context, FastMCP
 
@@ -20,11 +21,12 @@ from zotero_mcp.utils import format_creators
 
 
 def ensure_list(value: Union[str, List[str], None]) -> List[str]:
-    """Convert a string or list value to a list."""
+    """Convert a comma-separated string or list into a list of strings."""
     if value is None:
         return []
     if isinstance(value, str):
-        return [value]
+        parts = re.split(r"[;,]", value)
+        return [p.strip() for p in parts if p.strip()]
     if isinstance(value, list):
         return value
     return []
@@ -641,6 +643,11 @@ def batch_update_tags(
         Summary of the batch update
     """
     try:
+        if os.environ.get("ZOTERO_LOCAL", "").lower() in ["true", "yes", "1"]:
+            ctx.info(
+                "ZOTERO_LOCAL is set but batch tag updates require write access. "
+                "Using the web API instead."
+            )
         if not query:
             return "Error: Search query cannot be empty"
 
@@ -651,7 +658,7 @@ def batch_update_tags(
             return "Error: You must specify either tags to add or tags to remove"
         
         ctx.info(f"Batch updating tags for items matching '{query}'")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=False)
         
         # Search for items matching the query
         zot.add_parameters(q=query, limit=limit)
@@ -1459,7 +1466,12 @@ def create_note(
     """
     try:
         ctx.info(f"Creating note for item {item_key}")
-        zot = get_zotero_client()
+        if os.environ.get("ZOTERO_LOCAL", "").lower() in ["true", "yes", "1"]:
+            ctx.info(
+                "ZOTERO_LOCAL is set but note creation requires write access. "
+                "Using the web API instead."
+            )
+        zot = get_zotero_client(local=False)
 
         tags = ensure_list(tags)
         
