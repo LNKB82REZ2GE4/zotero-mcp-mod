@@ -200,6 +200,10 @@ The first time you use PDF annotation features, the necessary tools will be auto
 - `zotero_search_notes`: Search in notes and annotations (including PDF-extracted)
 - `zotero_create_note`: Create a new note for an item (beta feature)
 
+When providing tags (for example with `zotero_create_note` or batch tag updates),
+use a comma-separated string like `"cfrp, impact mechanics"` or supply a list of
+strings. Each tag will be applied individually.
+
 ## 🔍 Troubleshooting
 
 - **No results found**: Ensure Zotero is running and the local API is enabled
