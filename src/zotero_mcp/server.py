@@ -68,7 +68,7 @@ def search_items(
             return "Error: Search query cannot be empty"
         
         ctx.info(f"Searching Zotero for '{query}'")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Search using the query parameters
         zot.add_parameters(q=query, qmode=qmode, itemType=item_type, limit=limit)
@@ -142,7 +142,7 @@ def get_item_metadata(
     """
     try:
         ctx.info(f"Fetching metadata for item {item_key}")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         item = zot.item(item_key)
         if not item:
@@ -176,7 +176,7 @@ def get_item_fulltext(
     """
     try:
         ctx.info(f"Fetching full text for item {item_key}")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # First get the item metadata
         item = zot.item(item_key)
@@ -250,7 +250,7 @@ def get_collections(
     """
     try:
         ctx.info("Fetching collections")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         collections = zot.collections(limit=limit)
         
@@ -342,7 +342,7 @@ def get_collection_items(
     """
     try:
         ctx.info(f"Fetching items for collection {collection_key}")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # First get the collection details
         try:
@@ -407,7 +407,7 @@ def get_item_children(
     """
     try:
         ctx.info(f"Fetching children for item {item_key}")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # First get the parent item details
         try:
@@ -521,7 +521,7 @@ def get_tags(
     """
     try:
         ctx.info("Fetching tags")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         tags = zot.tags(limit=limit)
         if not tags:
@@ -572,7 +572,7 @@ def get_recent(
     """
     try:
         ctx.info(f"Fetching {limit} recent items")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Ensure limit is a reasonable number
         if limit <= 0:
@@ -774,7 +774,7 @@ def advanced_search(
             return "Error: No search conditions provided"
         
         ctx.info(f"Performing advanced search with {len(conditions)} conditions")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Prepare search parameters
         params = {}
@@ -926,7 +926,7 @@ def get_annotations(
     """
     try:
         # Initialize Zotero client
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Prepare annotations list
         annotations = []
@@ -1227,7 +1227,7 @@ def get_notes(
     """
     try:
         ctx.info(f"Fetching notes{f' for item {item_key}' if item_key else ''}")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Prepare search parameters
         params = {"itemType": "note"}
@@ -1314,7 +1314,7 @@ def search_notes(
             return "Error: Search query cannot be empty"
         
         ctx.info(f"Searching Zotero notes for '{query}'")
-        zot = get_zotero_client()
+        zot = get_zotero_client(local=True)
         
         # Search for notes and annotations
         results = []
